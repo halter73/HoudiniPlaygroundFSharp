@@ -17,20 +17,16 @@ type Startup() =
     member _.ConfigureServices(services: IServiceCollection) =
         ()
 
-    [<HttpGet("/")>]
-    member _.GetTodo() =
-        { Id = 1; Name = "Play more!"; IsComplete = false }
-
-    [<HttpPost("/")>]
-    member _.EchoTodo(todo: [<FromBody>] Todo) = todo
-
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    member self.Configure(app: IApplicationBuilder, env: IWebHostEnvironment) =
+    member _.Configure(app: IApplicationBuilder, env: IWebHostEnvironment) =
         if env.IsDevelopment() then
             app.UseDeveloperExceptionPage() |> ignore
 
         app.UseRouting()
            .UseEndpoints(fun endpoints ->
-                endpoints.MapAction(self.GetTodo :?> Func<Todo>) |> ignore;
-                endpoints.MapAction(self.EchoTodo :?> Func<Todo, Todo>) |> ignore;
+                endpoints.MapAction([<HttpGet("/")>] fun () ->
+                    { Id = 1; Name = "Play more!"; IsComplete = false }) |> ignore;
+
+                endpoints.MapAction([<HttpPost("/")>] fun (todo: Todo [<FromBody>]) ->
+                    todo) |> ignore;
             ) |> ignore
