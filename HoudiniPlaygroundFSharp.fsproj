@@ -5,8 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FeatherHttp" Version="0.1.81-alpha.ge556685134" />
   </ItemGroup>
 
 </Project>

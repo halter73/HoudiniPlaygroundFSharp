@@ -1,25 +1,24 @@
-namespace HoudiniPlaygroundFSharp
-
 open System
-open System.Collections.Generic
-open System.IO
-open System.Linq
-open System.Threading.Tasks
-open Microsoft.AspNetCore
-open Microsoft.AspNetCore.Hosting
-open Microsoft.Extensions.Configuration
-open Microsoft.Extensions.Hosting
-open Microsoft.Extensions.Logging
+open Microsoft.AspNetCore.Builder
+open Microsoft.AspNetCore.Http
+open Microsoft.AspNetCore.Mvc
 
-module Program =
-    let createHostBuilder args =
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(fun webBuilder ->
-                webBuilder.UseStartup<Startup>() |> ignore
-            )
+type Todo = { Id: int; Name: string; IsComplete: bool }
 
-    [<EntryPoint>]
-    let main args =
-        createHostBuilder(args).Build().Run()
+[<HttpPost("/")>]
+let echoTodo ([<FromBody>] todo) = todo
 
-        0 // Exit code
+[<HttpGet("/")>]
+let getTodo () = { Id = 0; Name = "Play more!"; IsComplete = false }
+
+[<EntryPoint>]
+let main args =
+    let app = WebApplication.Create(args)
+
+    app.MapAction(Func<Todo,Todo>(echoTodo)) |> ignore
+    app.MapAction(Func<Todo>(getTodo)) |> ignore
+
+    let task = app.RunAsync() |> Async.AwaitTask
+    Async.RunSynchronously(task)
+
+    0 // Exit code
