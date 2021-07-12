@@ -9,8 +9,8 @@ type Todo = { Id: int; Name: string; IsComplete: bool }
 let main args =
     let app = WebApplication.Create(args)
 
-    app.MapPost("/", Func<Todo,Todo>(fun todo -> todo)) |> ignore
-    app.MapGet("/", Func<Todo>(fun () -> { Id = 0; Name = "Play more!"; IsComplete = false })) |> ignore
+    app.MapPost("/", fun (todo : Todo) -> todo) |> ignore
+    app.MapGet("/", fun () -> { Id = 0; Name = "Play more!"; IsComplete = false }) |> ignore
 
     app.Run()
 
