@@ -12,7 +12,6 @@ let main args =
     app.MapPost("/", Func<Todo,Todo>(fun todo -> todo)) |> ignore
     app.MapGet("/", Func<Todo>(fun () -> { Id = 0; Name = "Play more!"; IsComplete = false })) |> ignore
 
-    let task = app.RunAsync() |> Async.AwaitTask
-    Async.RunSynchronously(task)
+    app.Run()
 
     0 // Exit code
